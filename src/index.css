@@ -45,25 +45,3 @@ input, textarea, button {
 }
 
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .Toastify__toast-container {
-      width: 90%;
-      max-width: 300px; /* Smaller max width for mobile devices */
-  }
-
-  .Toastify__toast {
-      font-size: 12px; /* Smaller font size for mobile devices */
-  }
-}
-
-@media (max-width: 400px) {
-  .Toastify__toast-container {
-      width: 95%;
-      max-width: 250px; /* Even smaller max width for very small devices */
-  }
-
-  .Toastify__toast {
-      font-size: 11px; /* Even smaller font size for very small devices */
-  }
-}

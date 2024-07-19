@@ -13,7 +13,7 @@ const App = () => {
     const [nav, setnav] = useState(false)
     const [form, setForm] = useState(false)
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
 
 
     return (

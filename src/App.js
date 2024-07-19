@@ -19,7 +19,7 @@ const App = () => {
     return (
         <Router>
             {loading && <Loader/>}
-            <ToastContainer/>
+            <ToastContainer position='top-center' theme='colored' autoClose={2000}/>
             { nav && <Navbar form = {form} />}
             <div className="App" style={nav ? { marginTop: "80px" } : {}}>
                 <header>

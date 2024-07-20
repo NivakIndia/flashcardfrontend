@@ -86,7 +86,7 @@ const Credential = ({setnav, setLoading}) => {
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Authentication
         </Typography>
-        <Typography align="center" gutterBottom>*May it take some time initially to restart server wait patiently</Typography>
+        <Typography color="#ffff00" align="center" gutterBottom>*May it take some time initially to restart server wait patiently</Typography>
         <Tabs value={tab} onChange={handleTabChange} centered>
           <Tab label="Login" />
           <Tab label="Register" />

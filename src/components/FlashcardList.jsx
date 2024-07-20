@@ -43,7 +43,7 @@ const FlashcardList = ({setnav, setForm, setLoading}) => {
     useEffect(() => {
         setnav(true)
         setForm(false)
-
+        fetchFlashcards();
         const handleOnline = () => {
             toast.info("Back online");
             fetchFlashcards();

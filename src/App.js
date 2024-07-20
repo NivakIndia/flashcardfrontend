@@ -1,10 +1,10 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import FlashcardList from './components/FlashcardList';
 import FlashcardForm from './components/FlashcardForm';
 import Credential from './components/Credential';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
 import Loader from './Loader';
@@ -15,6 +15,28 @@ const App = () => {
 
     const [loading, setLoading] = useState(false)
 
+    useEffect(() => {
+        const handleOnline = () => {
+            toast.info("Back online");
+        };
+
+        const handleOffline = () => {
+            toast.error("You are offline. Please check your network connection.",{
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+            });
+        };
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, [])
+    
 
     return (
         <Router>

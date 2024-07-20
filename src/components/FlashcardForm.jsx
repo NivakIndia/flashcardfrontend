@@ -11,13 +11,14 @@ const FlashcardForm = ({setnav, setForm, setLoading}) => {
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
     const [code, setIsCode] = useState(false);
-    const [language, setLanguage] = useState('javascript'); // Default language
+    const [category, setCategory] = useState('');
+    const [language, setLanguage] = useState('javascript');
     const [savedToken, setsavedToken] = useState("")
 
     const handleSubmit = async (e) => {
         setLoading(true)
         e.preventDefault();
-        const response = await axiosConfig.post('/nivak/flashcard/addcard/', { question, answer, code, language }, {
+        const response = await axiosConfig.post('/nivak/flashcard/addcard/', { question, answer, category, code, language }, {
             params: {
                 token : savedToken
             }
@@ -26,6 +27,7 @@ const FlashcardForm = ({setnav, setForm, setLoading}) => {
             toast.success(response.data.message)
             setQuestion("")
             setAnswer("")
+            setCategory("")
             setIsCode(false)
             setLanguage("javascript")
         }
@@ -146,17 +148,18 @@ const FlashcardForm = ({setnav, setForm, setLoading}) => {
                     <Editor height="300px" theme='vs-dark' defaultLanguage='javascript' language={language} defaultValue='// some comment' value={answer} onChange={(value) => setAnswer(value)}/>
                 </Box>
             ) : (
-                <TextField
-                    label="Answer"
-                    variant="outlined"
-                    multiline
-                    rows={4}
-                    value={answer}
-                    onChange={e => setAnswer(e.target.value)}
-                    required
-                    sx={{ mb: 2, width: '100%' }}
-                />
+                <Box sx={{ marginBottom: 2 , width: '100%'}}>
+                    <Editor  height="300px" theme='vs-dark' defaultLanguage='txt' value={answer} onChange={(value) => setAnswer(value)}/>
+                </Box>
             )}
+            <TextField
+                label="Category"
+                variant="outlined"
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+                required
+                sx={{ mb: 2, width: '100%' }}
+            />
             <Button type="submit" variant="contained" color="primary">
                 Add Flashcard
             </Button>

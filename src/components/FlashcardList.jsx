@@ -5,14 +5,15 @@ import axiosConfig from '../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Box, Grid, TextField, Typography } from '@mui/material';
+import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 
-const FlashcardList = ({setnav, setForm, setLoading}) => {
+const FlashcardList = ({setnav, setForm}) => {
     const navigate = useNavigate();
     const [flashcards, setFlashcards] = useState([]);
     const [categoryInput, setCategoryInput] = useState('');
 
     const fetchFlashcards = async () => {
-        setLoading(true)
+        const loaderid = showLoaderToast()
         const savedToken = localStorage.getItem('token');
         const tokenExpiry = localStorage.getItem('tokenExpiry');
 
@@ -29,7 +30,7 @@ const FlashcardList = ({setnav, setForm, setLoading}) => {
             toast.warning("Login to access")
         }
 
-        setLoading(false)
+        hideLoaderToast(loaderid)
     }
 
     const handleCategoryInputChange = (e) => {
@@ -92,7 +93,7 @@ const FlashcardList = ({setnav, setForm, setLoading}) => {
                 {filteredFlashcards.length > 0 ? (
                     filteredFlashcards.map((flashcard) => (
                         <Grid item xs={12} sm={6} key={flashcard.cardId}>
-                            <Flashcard flashcard={flashcard} fetchFlashcards={fetchFlashcards} setLoading={setLoading} />
+                            <Flashcard flashcard={flashcard} fetchFlashcards={fetchFlashcards} />
                         </Grid>
                     ))
                 ) : (

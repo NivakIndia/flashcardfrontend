@@ -4,8 +4,9 @@ import { Editor } from '@monaco-editor/react'
 import axiosConfig from '../api/axiosConfig';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 
-const FlashcardForm = ({setnav, setForm, setLoading}) => {
+const FlashcardForm = ({setnav, setForm}) => {
     const navigate = useNavigate()
 
     const [question, setQuestion] = useState('');
@@ -16,7 +17,7 @@ const FlashcardForm = ({setnav, setForm, setLoading}) => {
     const [savedToken, setsavedToken] = useState("")
 
     const handleSubmit = async (e) => {
-        setLoading(true)
+        const loaderid = showLoaderToast()
         e.preventDefault();
         const response = await axiosConfig.post('/nivak/flashcard/addcard/', { question, answer, category, code, language }, {
             params: {
@@ -34,7 +35,7 @@ const FlashcardForm = ({setnav, setForm, setLoading}) => {
         else
             toast.error(response.data.message)
 
-        setLoading(false)
+       hideLoaderToast(loaderid)
             
     };
 

@@ -3,12 +3,15 @@ import { Container, Box, TextField, Button, Typography, Tabs, Tab } from '@mui/m
 import axiosConfig from '../api/axiosConfig';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 
-const Credential = ({setnav, setLoading}) => {
+const Credential = ({setnav}) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [tab, setTab] = useState(0);
+
+  const [loadingToastId, setLoadingToastId] = useState(null);
 
   const handleTabChange = (event, newValue) => {
     setUserName("")
@@ -28,7 +31,8 @@ const Credential = ({setnav, setLoading}) => {
   };
 
   const handleLogin = async (e) => {
-    setLoading(true)
+    const loaderid = showLoaderToast()
+    console.log(loaderid);
     e.preventDefault();
     try {
       const response = await axiosConfig.post('/nivak/flashcard/auth/login/', { userName, password });
@@ -45,15 +49,15 @@ const Credential = ({setnav, setLoading}) => {
       else
         toast.error(response.data.message);
 
-      setLoading(false)
+      hideLoaderToast(loaderid)
     } catch (error) {
       toast.error('Login failed');
-      setLoading(false)
+      hideLoaderToast(loaderid)
     }
   };
 
   const handleRegister = async (e) => {
-    setLoading(true)
+    const loaderid = showLoaderToast()
     e.preventDefault();
     try {
       const response = await axiosConfig.post('/nivak/flashcard/auth/register/', { userName, password });
@@ -67,10 +71,10 @@ const Credential = ({setnav, setLoading}) => {
         toast.error(response.data.message);
       }
 
-      setLoading(false)
+      hideLoaderToast(loaderid)
     } catch (error) {
       toast.error('Registration failed');
-      setLoading(false)
+      hideLoaderToast(loaderid)
     }
   };
 

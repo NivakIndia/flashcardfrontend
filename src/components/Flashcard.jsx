@@ -7,8 +7,9 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import axiosConfig from '../api/axiosConfig';
 import { Editor } from '@monaco-editor/react';
+import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 
-const Flashcard = ({ flashcard, fetchFlashcards, setLoading }) => {
+const Flashcard = ({ flashcard, fetchFlashcards }) => {
     const navigate = useNavigate();
     const [showAnswer, setShowAnswer] = useState(false);
     const [upgradeOpen, setUpgradeOpen] = useState(false);
@@ -31,7 +32,7 @@ const Flashcard = ({ flashcard, fetchFlashcards, setLoading }) => {
     };
 
     const handleDelete = async () => {
-        setLoading(true);
+        const loaderid = showLoaderToast()
         const response = await axiosConfig.post('/nivak/flashcard/deletecard/', null, {
             params: {
                 token: savedToken,
@@ -44,7 +45,7 @@ const Flashcard = ({ flashcard, fetchFlashcards, setLoading }) => {
         } else {
             toast.error(response.data.message);
         }
-        setLoading(false);
+        hideLoaderToast(loaderid)
         handleConfirmDeleteClose();
     };
 
@@ -70,7 +71,7 @@ const Flashcard = ({ flashcard, fetchFlashcards, setLoading }) => {
     };
 
     const handleUpgradeSubmit = async () => {
-        setLoading(true);
+        const loaderid = showLoaderToast()
         const response = await axiosConfig.post('/nivak/flashcard/updatecard/', { cardId: flashcard.cardId, question, answer, category, code, language }, {
             params: {
                 token: savedToken
@@ -84,7 +85,7 @@ const Flashcard = ({ flashcard, fetchFlashcards, setLoading }) => {
         }
         fetchFlashcards();
         setUpgradeOpen(false);
-        setLoading(false);
+        hideLoaderToast(loaderid)
     };
 
     const handleLanguageChange = (e) => {

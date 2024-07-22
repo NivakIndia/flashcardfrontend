@@ -7,13 +7,10 @@ import Credential from './components/Credential';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
-import Loader from './Loader';
 
 const App = () => {
     const [nav, setnav] = useState(false)
     const [form, setForm] = useState(false)
-
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const handleOnline = () => {
@@ -40,9 +37,6 @@ const App = () => {
 
     return (
         <Router>
-            <div style={{position: 'absolute', zIndex: 999999, top: 0, left: 0, background: "#ffffff"}}>
-                {loading && <Loader/>}
-            </div>
             <ToastContainer position='top-center' theme='colored' autoClose={2000}/>
             { nav && <Navbar form = {form} />}
             <div className="App" style={nav ? { marginTop: "80px" } : {}}>
@@ -52,9 +46,9 @@ const App = () => {
                 <main>
 
                     <Routes>
-                        <Route path="/" element={<Credential setnav = {setnav} setLoading = {setLoading}/>} />
-                        <Route path="/flashcards" element={<FlashcardList setnav = {setnav} setForm = {setForm} setLoading = {setLoading}/>} />
-                        <Route path='/flashcards/new' element={<FlashcardForm setnav = {setnav} setForm={setForm} setLoading = {setLoading}/>} />
+                        <Route path="/" element={<Credential setnav = {setnav}/>} />
+                        <Route path="/flashcards" element={<FlashcardList setnav = {setnav} setForm = {setForm}/>} />
+                        <Route path='/flashcards/new' element={<FlashcardForm setnav = {setnav} setForm={setForm}/>} />
                     </Routes>
                 </main>
             </div>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Box, TextField, Button, Typography, Tabs, Tab } from '@mui/material';
-import axios from 'axios';
 import axiosConfig from '../api/axiosConfig';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -76,7 +75,7 @@ const Credential = ({setnav, setLoading}) => {
   };
 
   useEffect(() => {
-    setnav(false);
+    this.setnav(false);
   }, [])
   
 
@@ -100,6 +99,7 @@ const Credential = ({setnav, setLoading}) => {
               value={userName}
               onChange={handleUserName}
               required
+              autoComplete="false"
               sx={{ mb: 2 }}
             />
             <TextField
@@ -109,6 +109,7 @@ const Credential = ({setnav, setLoading}) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="false"
               sx={{ mb: 2 }}
             />
             <Button fullWidth variant="contained" type="submit">
@@ -125,6 +126,7 @@ const Credential = ({setnav, setLoading}) => {
               value={userName}
               onChange={handleUserName}
               required
+              autoComplete="false"
               sx={{ mb: 2 }}
             />
             <TextField
@@ -134,6 +136,7 @@ const Credential = ({setnav, setLoading}) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="false"
               sx={{ mb: 2 }}
             />
             <Button fullWidth variant="contained" type="submit">

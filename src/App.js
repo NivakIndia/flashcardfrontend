@@ -40,7 +40,9 @@ const App = () => {
 
     return (
         <Router>
-            {loading && <Loader/>}
+            <div style={{position: 'absolute', zIndex: 999999, top: 0, left: 0, background: "#ffffff"}}>
+                {loading && <Loader/>}
+            </div>
             <ToastContainer position='top-center' theme='colored' autoClose={2000}/>
             { nav && <Navbar form = {form} />}
             <div className="App" style={nav ? { marginTop: "80px" } : {}}>

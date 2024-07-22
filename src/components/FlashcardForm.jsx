@@ -25,17 +25,18 @@ const FlashcardForm = ({setnav, setForm}) => {
             }
         })
         if(response.data.success){
-            toast.success(response.data.message)
             setQuestion("")
             setAnswer("")
             setCategory("")
             setIsCode(false)
             setLanguage("javascript")
+            hideLoaderToast(loaderid)
+            toast.success(response.data.message);
         }
-        else
+        else{
+            hideLoaderToast(loaderid)
             toast.error(response.data.message)
-
-       hideLoaderToast(loaderid)
+        }
             
     };
 

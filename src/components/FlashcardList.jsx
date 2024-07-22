@@ -23,14 +23,13 @@ const FlashcardList = ({setnav, setForm}) => {
                     token : savedToken
                 }
              })
-
              setFlashcards(response.data.data);
+            hideLoaderToast(loaderid)
         } else {
             navigate('/')
+            hideLoaderToast(loaderid)
             toast.warning("Login to access")
         }
-
-        hideLoaderToast(loaderid)
     }
 
     const handleCategoryInputChange = (e) => {

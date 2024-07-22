@@ -40,12 +40,13 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             }
         });
         if (response.data.success) {
-            toast.success(response.data.message);
             fetchFlashcards();
+            hideLoaderToast(loaderid)
+            toast.success(response.data.message);
         } else {
+            hideLoaderToast(loaderid)
             toast.error(response.data.message);
         }
-        hideLoaderToast(loaderid)
         handleConfirmDeleteClose();
     };
 
@@ -78,14 +79,15 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             }
         });
         if (response.data.success) {
+            hideLoaderToast(loaderid)
             toast.success(response.data.message);
             fetchFlashcards();
         } else {
+            hideLoaderToast(loaderid)
             toast.error(response.data.message);
         }
         fetchFlashcards();
         setUpgradeOpen(false);
-        hideLoaderToast(loaderid)
     };
 
     const handleLanguageChange = (e) => {

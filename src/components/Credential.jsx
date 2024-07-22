@@ -42,17 +42,18 @@ const Credential = ({setnav}) => {
 
         localStorage.setItem('token', token);
         localStorage.setItem('tokenExpiry', expiryTime);
+        hideLoaderToast(loaderid)
         toast.success("Login Successfull");
         navigate("/flashcards")
       }
       
-      else
+      else{
+        hideLoaderToast(loaderid)
         toast.error(response.data.message);
-
-      hideLoaderToast(loaderid)
+      }
     } catch (error) {
-      toast.error('Login failed');
       hideLoaderToast(loaderid)
+      toast.error('Login failed');
     }
   };
 
@@ -65,16 +66,16 @@ const Credential = ({setnav}) => {
         setUserName("")
         setPassword("")
         setTab(0);
+        hideLoaderToast(loaderid)
         toast.success(response.data.message);
       }
       else{
+        hideLoaderToast(loaderid)
         toast.error(response.data.message);
       }
-
-      hideLoaderToast(loaderid)
     } catch (error) {
-      toast.error('Registration failed');
       hideLoaderToast(loaderid)
+      toast.error('Registration failed');
     }
   };
 

@@ -75,7 +75,7 @@ const Credential = ({setnav, setLoading}) => {
   };
 
   useEffect(() => {
-    this.setnav(false);
+    setnav(false);
   }, [])
   
 

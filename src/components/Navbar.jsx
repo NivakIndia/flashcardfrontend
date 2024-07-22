@@ -43,7 +43,7 @@ const Navbar = ({form}) => {
             <AppBar position="fixed">
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Flashcard App
+                        <img src='https://res.cloudinary.com/dzxh08cyi/image/upload/Portfolio/logo/Nivak_wwfjpc.png' alt='logo' height="40px"/>
                     </Typography>
                     {isMobile ? (
                         <div>

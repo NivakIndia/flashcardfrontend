@@ -149,6 +149,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                 ) : (
                     <Box sx={{ marginBottom: 2, width: '100%' }}>
                         <ReactQuill
+                            readOnly
                             ref={ref}
                             theme="bubble"
                             value={flashcard.answer}

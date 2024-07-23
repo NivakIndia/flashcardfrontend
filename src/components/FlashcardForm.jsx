@@ -1,50 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, TextField, Button, Checkbox, FormControlLabel, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { Editor } from '@monaco-editor/react'
+import { Editor } from '@monaco-editor/react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import axiosConfig from '../api/axiosConfig';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 
-const FlashcardForm = ({setnav, setForm}) => {
-    const navigate = useNavigate()
-
+const FlashcardForm = ({ setnav, setForm }) => {
+    const navigate = useNavigate();
+    
+    
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
     const [code, setIsCode] = useState(false);
     const [category, setCategory] = useState('');
     const [language, setLanguage] = useState('javascript');
-    const [savedToken, setsavedToken] = useState("")
+    const [savedToken, setsavedToken] = useState("");
+
+    const ref = useRef();
 
     const handleSubmit = async (e) => {
-        const loaderid = showLoaderToast()
         e.preventDefault();
-        const response = await axiosConfig.post('/nivak/flashcard/addcard/', { question, answer, category, code, language }, {
-            params: {
-                token : savedToken
+        const loaderid = showLoaderToast();
+        try {
+            const response = await axiosConfig.post('/nivak/flashcard/addcard/', { question, answer, category, code, language }, {
+                params: { token: savedToken }
+            });
+            if (response.data.success) {
+                setQuestion("");
+                setAnswer("");
+                setCategory("");
+                setIsCode(false);
+                setLanguage("javascript");
+                hideLoaderToast(loaderid);
+                toast.success(response.data.message);
+            } else {
+                hideLoaderToast(loaderid);
+                toast.error(response.data.message);
             }
-        })
-        if(response.data.success){
-            setQuestion("")
-            setAnswer("")
-            setCategory("")
-            setIsCode(false)
-            setLanguage("javascript")
-            hideLoaderToast(loaderid)
-            toast.success(response.data.message);
+        } catch (error) {
+            hideLoaderToast(loaderid);
+            toast.error("An error occurred. Please try again.");
         }
-        else{
-            hideLoaderToast(loaderid)
-            toast.error(response.data.message)
-        }
-            
     };
 
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
     };
 
-    
     useEffect(() => {
         const savedToken = localStorage.getItem('token');
         const tokenExpiry = localStorage.getItem('tokenExpiry');
@@ -52,12 +57,12 @@ const FlashcardForm = ({setnav, setForm}) => {
         if (savedToken && tokenExpiry && new Date().getTime() < tokenExpiry) {
             setsavedToken(savedToken);
         } else {
-            navigate('/')
-            toast.warning("Login to access")
+            navigate('/');
+            toast.warning("Login to access");
         }
         setnav(true);
         setForm(true);
-      }, [])
+    }, [navigate, setForm, setnav]);
 
     return (
         <Box
@@ -92,7 +97,7 @@ const FlashcardForm = ({setnav, setForm}) => {
                 control={
                     <Checkbox
                         checked={code}
-                        onChange={e => setIsCode(e.target.checked)}
+                        onChange={e => {setIsCode(e.target.checked); setAnswer("")}}
                     />
                 }
                 label="Is Code?"
@@ -147,11 +152,23 @@ const FlashcardForm = ({setnav, setForm}) => {
                             <MenuItem value="objective-c">Objective-C</MenuItem>
                         </Select>
                     </FormControl>
-                    <Editor height="300px" theme='vs-dark' defaultLanguage='javascript' language={language} defaultValue='// some comment' value={answer} onChange={(value) => setAnswer(value)}/>
+                    <Editor
+                        height="300px"
+                        theme='vs-dark'
+                        defaultLanguage=''
+                        language={language}
+                        value={answer}
+                        onChange={(value) => setAnswer(value)}
+                    />
                 </Box>
             ) : (
-                <Box sx={{ marginBottom: 2 , width: '100%'}}>
-                    <Editor  height="300px" theme='vs-dark' defaultLanguage='txt' value={answer} onChange={(value) => setAnswer(value)}/>
+                <Box sx={{ marginBottom: 2, width: '100%' }}>
+                    <ReactQuill
+                        ref={ref}
+                        theme="bubble"
+                        value={answer}
+                        onChange={setAnswer}
+                    />
                 </Box>
             )}
             <TextField

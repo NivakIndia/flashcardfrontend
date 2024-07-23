@@ -32,7 +32,6 @@ const Credential = ({setnav}) => {
 
   const handleLogin = async (e) => {
     const loaderid = showLoaderToast()
-    console.log(loaderid);
     e.preventDefault();
     try {
       const response = await axiosConfig.post('/nivak/flashcard/auth/login/', { userName, password });

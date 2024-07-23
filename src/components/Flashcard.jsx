@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Button, Collapse, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControlLabel, Checkbox, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosConfig from '../api/axiosConfig';
 import { Editor } from '@monaco-editor/react';
 import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
+import ReactQuill from 'react-quill';
 
 const Flashcard = ({ flashcard, fetchFlashcards }) => {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const [savedToken, setsavedToken] = useState("");
 
+    const ref = useRef(null)
     const [question, setQuestion] = useState(flashcard.question);
     const [answer, setAnswer] = useState(flashcard.answer);
     const [category, setCategory] = useState(flashcard.category);
@@ -32,22 +34,26 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     };
 
     const handleDelete = async () => {
-        const loaderid = showLoaderToast()
-        const response = await axiosConfig.post('/nivak/flashcard/deletecard/', null, {
-            params: {
-                token: savedToken,
-                cardId: flashcard.cardId
+        const loaderid = showLoaderToast();
+        try {
+            const response = await axiosConfig.post('/nivak/flashcard/deletecard/', null, {
+                params: {
+                    token: savedToken,
+                    cardId: flashcard.cardId
+                }
+            });
+            if (response.data.success) {
+                fetchFlashcards();
+                toast.success(response.data.message);
+            } else {
+                toast.error(response.data.message);
             }
-        });
-        if (response.data.success) {
-            fetchFlashcards();
-            hideLoaderToast(loaderid)
-            toast.success(response.data.message);
-        } else {
-            hideLoaderToast(loaderid)
-            toast.error(response.data.message);
+        } catch (error) {
+            toast.error("An error occurred while deleting.");
+        } finally {
+            hideLoaderToast(loaderid);
+            handleConfirmDeleteClose();
         }
-        handleConfirmDeleteClose();
     };
 
     const handleConfirmDeleteOpen = () => {
@@ -72,22 +78,23 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     };
 
     const handleUpgradeSubmit = async () => {
-        const loaderid = showLoaderToast()
-        const response = await axiosConfig.post('/nivak/flashcard/updatecard/', { cardId: flashcard.cardId, question, answer, category, code, language }, {
-            params: {
-                token: savedToken
+        const loaderid = showLoaderToast();
+        try {
+            const response = await axiosConfig.post('/nivak/flashcard/updatecard/', { cardId: flashcard.cardId, question, answer, category, code, language }, {
+                params: { token: savedToken }
+            });
+            if (response.data.success) {
+                toast.success(response.data.message);
+                fetchFlashcards();
+            } else {
+                toast.error(response.data.message);
             }
-        });
-        if (response.data.success) {
-            hideLoaderToast(loaderid)
-            toast.success(response.data.message);
-            fetchFlashcards();
-        } else {
-            hideLoaderToast(loaderid)
-            toast.error(response.data.message);
+        } catch (error) {
+            toast.error("An error occurred while updating.");
+        } finally {
+            hideLoaderToast(loaderid);
+            setUpgradeOpen(false);
         }
-        fetchFlashcards();
-        setUpgradeOpen(false);
     };
 
     const handleLanguageChange = (e) => {
@@ -104,7 +111,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             navigate('/');
             toast.warning("Login to access");
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <Box
@@ -140,9 +147,13 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                         {flashcard.answer}
                     </SyntaxHighlighter>
                 ) : (
-                    <SyntaxHighlighter showLineNumbers={true} language="txt" style={oneDark} customStyle={{ overflow: 'scroll', minHeight: "200px" }}>
-                        {flashcard.answer}
-                    </SyntaxHighlighter>
+                    <Box sx={{ marginBottom: 2, width: '100%' }}>
+                        <ReactQuill
+                            ref={ref}
+                            theme="bubble"
+                            value={flashcard.answer}
+                        />
+                    </Box>
                 )}
             </Collapse>
             <Button onClick={toggleAnswer} variant="contained" sx={{ mt: 2 }}>
@@ -166,7 +177,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                         control={
                             <Checkbox
                                 checked={code}
-                                onChange={e => setIsCode(e.target.checked)}
+                                onChange={e => {setIsCode(e.target.checked); setAnswer("")}}
                             />
                         }
                         label="Is Code?"
@@ -175,7 +186,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                     {code ? (
                         <Box
                             sx={{
-                                width: '100%',
+                                width: 'auto',
                                 mb: 2,
                                 p: 2,
                                 border: '1px solid #ccc',
@@ -221,11 +232,16 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                                     <MenuItem value="objective-c">Objective-C</MenuItem>
                                 </Select>
                             </FormControl>
-                            <Editor height="300px" theme='vs-dark' defaultLanguage={language} language={language} value={answer} onChange={(value) => setAnswer(value)} />
+                                <Editor height={300} theme='vs-dark' defaultLanguage={language} language={language} value={answer} onChange={(value) => setAnswer(value)} />
                         </Box>
                     ) : (
-                        <Box sx={{ marginBottom: 3 }}>
-                            <Editor  height="300px" theme='vs-dark' defaultLanguage='txt' value={answer} onChange={(value) => setAnswer(value)}/>
+                        <Box sx={{ marginBottom: 2, width: '100%' }}>
+                            <ReactQuill
+                                ref={ref}
+                                theme="bubble"
+                                value={answer}
+                                onChange={setAnswer}
+                            />
                         </Box>
                     )}
                     <TextField

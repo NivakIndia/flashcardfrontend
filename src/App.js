@@ -5,6 +5,7 @@ import FlashcardList from './components/FlashcardList';
 import FlashcardForm from './components/FlashcardForm';
 import Credential from './components/Credential';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-quill/dist/quill.bubble.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
 

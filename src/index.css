@@ -43,3 +43,24 @@ input, textarea, button {
   padding: 8px;
   font-size: 16px;
 }
+
+
+
+.ql-container {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.ql-editor {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.ql-snow .ql-stroke {
+  stroke: #ffffff;
+}
+
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  fill: #ffffff;
+}

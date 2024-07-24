@@ -150,6 +150,7 @@ const FlashcardForm = ({ setnav, setForm }) => {
                             <MenuItem value="sass">SASS</MenuItem>
                             <MenuItem value="r">R</MenuItem>
                             <MenuItem value="objective-c">Objective-C</MenuItem>
+                            <MenuItem value="txt">Text</MenuItem>
                         </Select>
                     </FormControl>
                     <Editor

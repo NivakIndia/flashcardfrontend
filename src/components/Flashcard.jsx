@@ -231,6 +231,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                                     <MenuItem value="sass">SASS</MenuItem>
                                     <MenuItem value="r">R</MenuItem>
                                     <MenuItem value="objective-c">Objective-C</MenuItem>
+                                    <MenuItem value="txt">Text</MenuItem>
                                 </Select>
                             </FormControl>
                                 <Editor height={300} theme='vs-dark' defaultLanguage={language} language={language} value={answer} onChange={(value) => setAnswer(value)} />

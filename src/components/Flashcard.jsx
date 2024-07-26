@@ -144,8 +144,8 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                 <IoCloseSharp />
             </IconButton>
             <Typography variant="h5" gutterBottom>
-                {showFullQuestion ? question : (question.length > 50 ? `${question.substring(0, 50)}...` : question)}
-                {!showFullQuestion && question.length > 50 && (
+                {showFullQuestion ? question : (question.length > 35 ? `${question.substring(0, 35)}...` : question)}
+                {!showFullQuestion && question.length > 35 && (
                     <Button onClick={toggleFullQuestion} color="primary" size="small">
                         View more
                     </Button>

@@ -16,8 +16,9 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     const [upgradeOpen, setUpgradeOpen] = useState(false);
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const [savedToken, setsavedToken] = useState("");
+    const [showFullQuestion, setShowFullQuestion] = useState(false);
 
-    const ref = useRef(null)
+    const ref = useRef(null);
     const [question, setQuestion] = useState(flashcard.question);
     const [answer, setAnswer] = useState(flashcard.answer);
     const [category, setCategory] = useState(flashcard.category);
@@ -113,6 +114,10 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
         }
     }, [navigate]);
 
+    const toggleFullQuestion = () => {
+        setShowFullQuestion(!showFullQuestion);
+    };
+
     return (
         <Box
             className="flashcard"
@@ -139,7 +144,12 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                 <IoCloseSharp />
             </IconButton>
             <Typography variant="h5" gutterBottom>
-                {flashcard.question}
+                {showFullQuestion ? question : `${question.substring(0, 50)}...`}{" "}
+                {!showFullQuestion && (
+                    <Button onClick={toggleFullQuestion} color="primary" size="small">
+                        View more
+                    </Button>
+                )}
             </Typography>
             <Collapse in={showAnswer}>
                 {flashcard.code ? (

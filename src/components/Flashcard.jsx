@@ -143,7 +143,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             >
                 <IoCloseSharp />
             </IconButton>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ whiteSpace: 'pre-wrap' }}>
                 {showFullQuestion ? question : (question.length > 35 ? `${question.substring(0, 35)}...` : question)}
                 {!showFullQuestion && question.length > 35 && (
                     <Button onClick={toggleFullQuestion} color="primary" size="small">

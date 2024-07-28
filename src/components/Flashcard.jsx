@@ -129,6 +129,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                 mb: 2,
                 width: "auto",
                 position: 'relative',
+                textAlign: 'left',
             }}
         >
             <IconButton

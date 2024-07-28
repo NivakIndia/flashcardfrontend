@@ -129,7 +129,6 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                 mb: 2,
                 width: "auto",
                 position: 'relative',
-                textAlign: 'left',
             }}
         >
             <IconButton
@@ -144,14 +143,20 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             >
                 <IoCloseSharp />
             </IconButton>
-            <Typography variant="h5" gutterBottom sx={{ whiteSpace: 'pre-wrap' }}>
-                {showFullQuestion ? question : (question.length > 35 ? `${question.substring(0, 35)}...` : question)}
-                {!showFullQuestion && question.length > 35 && (
-                    <Button onClick={toggleFullQuestion} color="primary" size="small">
-                        View more
-                    </Button>
-                )}
-            </Typography>
+            <Box sx={{ textAlign: 'left' }}>
+                <Typography
+                    variant="h5"
+                    gutterBottom
+                    sx={{ whiteSpace: 'pre-wrap' }} // Preserve whitespace and line breaks
+                >
+                    {showFullQuestion ? question : (question.length > 35 ? `${question.substring(0, 35)}...` : question)}
+                    {!showFullQuestion && question.length > 35 && (
+                        <Button onClick={toggleFullQuestion} color="primary" size="small">
+                            View more
+                        </Button>
+                    )}
+                </Typography>
+            </Box>
             <Collapse in={showAnswer}>
                 {flashcard.code ? (
                     <SyntaxHighlighter showLineNumbers={true} language={flashcard.language} style={oneDark} customStyle={{ overflow: 'scroll', minHeight: "200px" }}>

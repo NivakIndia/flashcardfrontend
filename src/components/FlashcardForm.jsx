@@ -92,7 +92,7 @@ const FlashcardForm = ({ setnav, setForm }) => {
                 onChange={e => setQuestion(e.target.value)}
                 required
                 multiline
-                rows={20} 
+                minRows={1}
                 sx={{ mb: 2, width: '100%' }}
             />
             <FormControlLabel

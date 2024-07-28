@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, TextField, Button, Checkbox, FormControlLabel, Typography, FormControl, InputLabel, Select, MenuItem, TextareaAutosize } from '@mui/material';
+import { Box, TextField, Button, Checkbox, FormControlLabel, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Editor } from '@monaco-editor/react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -85,12 +85,14 @@ const FlashcardForm = ({ setnav, setForm }) => {
             <Typography variant="h4" gutterBottom>
                 Add New Flashcard
             </Typography>
-            <TextareaAutosize
+            <TextField
                 label="Question"
                 variant="outlined"
                 value={question}
                 onChange={e => setQuestion(e.target.value)}
                 required
+                multiline
+                rows={20} 
                 sx={{ mb: 2, width: '100%' }}
             />
             <FormControlLabel

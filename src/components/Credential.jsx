@@ -10,6 +10,8 @@ const Credential = ({setnav}) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [tab, setTab] = useState(0);
+  const [disableLogin, setDisableLogin] = useState(false);
+  const [disableReg, setDisableReg] = useState(false);
 
   const [loadingToastId, setLoadingToastId] = useState(null);
 
@@ -31,6 +33,7 @@ const Credential = ({setnav}) => {
   };
 
   const handleLogin = async (e) => {
+    setDisableLogin(true);
     const loaderid = showLoaderToast()
     e.preventDefault();
     try {
@@ -54,9 +57,11 @@ const Credential = ({setnav}) => {
       hideLoaderToast(loaderid)
       toast.error('Login failed');
     }
+    setDisableLogin(false)
   };
 
   const handleRegister = async (e) => {
+    setDisableReg(true)
     const loaderid = showLoaderToast()
     e.preventDefault();
     try {
@@ -76,6 +81,7 @@ const Credential = ({setnav}) => {
       hideLoaderToast(loaderid)
       toast.error('Registration failed');
     }
+    setDisableReg(false)
   };
 
   useEffect(() => {
@@ -116,7 +122,7 @@ const Credential = ({setnav}) => {
               autoComplete="false"
               sx={{ mb: 2 }}
             />
-            <Button fullWidth variant="contained" type="submit">
+            <Button fullWidth variant="contained" type="submit" disabled={disableLogin}>
               Login
             </Button>
           </Box>
@@ -143,7 +149,7 @@ const Credential = ({setnav}) => {
               autoComplete="false"
               sx={{ mb: 2 }}
             />
-            <Button fullWidth variant="contained" type="submit">
+            <Button fullWidth variant="contained" type="submit" disabled={disableReg}>
               Register
             </Button>
           </Box>

@@ -17,6 +17,9 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const [savedToken, setsavedToken] = useState("");
     const [showFullQuestion, setShowFullQuestion] = useState(false);
+    
+    const [disableUpdate, setDisableUpdate] = useState(false);
+    const [disableDelete, setDisableDelete] = useState(false);
 
     const ref = useRef(null);
     const [question, setQuestion] = useState(flashcard.question);
@@ -35,6 +38,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     };
 
     const handleDelete = async () => {
+        setDisableDelete(true);
         const loaderid = showLoaderToast();
         try {
             const response = await axiosConfig.post('/nivak/flashcard/deletecard/', null, {
@@ -55,6 +59,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             hideLoaderToast(loaderid);
             handleConfirmDeleteClose();
         }
+        setDisableDelete(false)
     };
 
     const handleConfirmDeleteOpen = () => {
@@ -79,6 +84,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     };
 
     const handleUpgradeSubmit = async () => {
+        setDisableUpdate(true)
         const loaderid = showLoaderToast();
         try {
             const response = await axiosConfig.post('/nivak/flashcard/updatecard/', { cardId: flashcard.cardId, question, answer, category, code, language }, {
@@ -96,6 +102,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             hideLoaderToast(loaderid);
             setUpgradeOpen(false);
         }
+        setDisableUpdate(false)
     };
 
     const handleLanguageChange = (e) => {
@@ -275,7 +282,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                     <Button onClick={handleUpgradeClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleUpgradeSubmit} color="primary">
+                    <Button onClick={handleUpgradeSubmit} color="primary" disabled={disableUpdate}>
                         Upgrade
                     </Button>
                 </DialogActions>
@@ -290,7 +297,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                     <Button onClick={handleConfirmDeleteClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleDelete} color="secondary">
+                    <Button onClick={handleDelete} color="secondary" disabled={disableDelete}>
                         Delete
                     </Button>
                 </DialogActions>

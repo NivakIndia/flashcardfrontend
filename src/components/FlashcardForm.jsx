@@ -18,10 +18,13 @@ const FlashcardForm = ({ setnav, setForm }) => {
     const [category, setCategory] = useState('');
     const [language, setLanguage] = useState('javascript');
     const [savedToken, setsavedToken] = useState("");
+    
+    const [disableAddCard, setDisableAddCard] = useState(false);
 
     const ref = useRef();
 
     const handleSubmit = async (e) => {
+        setDisableAddCard(true)
         e.preventDefault();
         const loaderid = showLoaderToast();
         try {
@@ -44,6 +47,7 @@ const FlashcardForm = ({ setnav, setForm }) => {
             hideLoaderToast(loaderid);
             toast.error("An error occurred. Please try again.");
         }
+        setDisableAddCard(false)
     };
 
     const handleLanguageChange = (e) => {
@@ -182,7 +186,7 @@ const FlashcardForm = ({ setnav, setForm }) => {
                 required
                 sx={{ mb: 2, width: '100%' }}
             />
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="submit" variant="contained" color="primary" disabled={disableAddCard}>
                 Add Flashcard
             </Button>
         </Box>

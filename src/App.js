@@ -9,6 +9,7 @@ import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
+import FlashcardHome from './components/FlashcardHome';
 
 const App = () => {
     const [nav, setnav] = useState(false)
@@ -49,7 +50,7 @@ const App = () => {
 
                     <Routes>
                         <Route path="/" element={<Credential setnav = {setnav}/>} />
-                        <Route path="/flashcards" element={<FlashcardList setnav = {setnav} setForm = {setForm}/>} />
+                        <Route path="/flashcards" element={<FlashcardHome setnav = {setnav} setForm = {setForm}/>} />
                         <Route path='/flashcards/new' element={<FlashcardForm setnav = {setnav} setForm={setForm}/>} />
                     </Routes>
                 </main>

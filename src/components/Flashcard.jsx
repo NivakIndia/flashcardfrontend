@@ -25,8 +25,27 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
     const [question, setQuestion] = useState(flashcard.question);
     const [answer, setAnswer] = useState(flashcard.answer);
     const [category, setCategory] = useState(flashcard.category);
+    const [newCategory, setNewCategory] = useState(false);
     const [code, setIsCode] = useState(flashcard.code);
     const [language, setLanguage] = useState(flashcard.language);
+    const [availableCategories, setAvailableCategories] = useState([]);
+
+    const fetchUserCategory = async () => {
+        const savedToken = localStorage.getItem('token');
+        const tokenExpiry = localStorage.getItem('tokenExpiry');
+
+        if (savedToken && tokenExpiry && new Date().getTime() < tokenExpiry) {
+            const response = await axiosConfig.post('/nivak/flashcard/getusercategory/', null, {
+                params: {
+                    token: savedToken
+                }
+            });
+            setAvailableCategories(response.data.data);
+        } else {
+            navigate('/');
+            toast.warning("Login to access");
+        }
+    };
 
     const toggleAnswer = () => {
         setShowAnswer(!showAnswer);
@@ -115,6 +134,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
 
         if (savedToken && tokenExpiry && new Date().getTime() < tokenExpiry) {
             setsavedToken(savedToken);
+            fetchUserCategory();
         } else {
             navigate('/');
             toast.warning("Login to access");
@@ -269,14 +289,41 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                             />
                         </Box>
                     )}
-                    <TextField
-                        label="Category"
-                        variant="outlined"
-                        value={category}
-                        onChange={e => setCategory(e.target.value)}
-                        required
-                        sx={{ mb: 2, width: '100%' }}
-                    />
+                    <FormControl sx={{ mb: 2, width: '100%' }}>
+                        <InputLabel id="select-category-label">Category</InputLabel>
+                        <Select
+                            labelId="select-category-label"
+                            id="select-category"
+                            value={category}
+                            onChange={e => {
+                                if (e.target.value === 'new') {
+                                    setNewCategory(true);
+                                    setCategory('');
+                                } else {
+                                    setNewCategory(false);
+                                    setCategory(e.target.value);
+                                }
+                            }}
+                            label="Category"
+                        >
+                            {availableCategories.map((cat, index) => (
+                                <MenuItem key={index} value={cat}>
+                                    {cat}
+                                </MenuItem>
+                            ))}
+                            <MenuItem value="new">New Category</MenuItem>
+                        </Select>
+                    </FormControl>
+                    {newCategory && (
+                        <TextField
+                            label="New Category"
+                            variant="outlined"
+                            value={category}
+                            onChange={e => setCategory(e.target.value)}
+                            required
+                            sx={{ mb: 2, width: '100%' }}
+                        />
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleUpgradeClose} color="primary">

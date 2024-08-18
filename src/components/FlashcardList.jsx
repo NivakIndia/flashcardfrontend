@@ -1,56 +1,60 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Flashcard from './Flashcard';
-import axiosConfig from '../api/axiosConfig';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { Box, Grid, TextField, Typography } from '@mui/material';
 import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import axiosConfig from '../api/axiosConfig';
 
-const FlashcardList = ({setnav, setForm}) => {
+const FlashcardList = ({category}) => {
     const navigate = useNavigate();
+    const [question, setQuestionInput] = useState('');
     const [flashcards, setFlashcards] = useState([]);
-    const [categoryInput, setCategoryInput] = useState('');
+
+    const handleQuestionInput = (e) => {
+        setQuestionInput(e.target.value);
+    };
 
     const fetchFlashcards = async () => {
-        const loaderid = showLoaderToast()
+        const loaderid = showLoaderToast();
         const savedToken = localStorage.getItem('token');
         const tokenExpiry = localStorage.getItem('tokenExpiry');
 
         if (savedToken && tokenExpiry && new Date().getTime() < tokenExpiry) {
-            const response = await axiosConfig.post('/nivak/flashcard/getflashcards/',null, { 
+            const response = await axiosConfig.post('/nivak/flashcard/getflashcards/', null, {
                 params: {
-                    token : savedToken
+                    token: savedToken
                 }
-             })
-             setFlashcards(response.data.data);
-            hideLoaderToast(loaderid)
+            });
+            setFlashcards(response.data.data);
+            hideLoaderToast(loaderid);
         } else {
-            navigate('/')
-            hideLoaderToast(loaderid)
-            toast.warning("Login to access")
+            navigate('/');
+            hideLoaderToast(loaderid);
+            toast.warning("Login to access");
         }
-    }
-
-    const handleCategoryInputChange = (e) => {
-        setCategoryInput(e.target.value);
     };
 
-    const filteredFlashcards = categoryInput
-        ? flashcards.filter(flashcard => flashcard.category.toLowerCase().includes(categoryInput.toLowerCase()))
+    const flashcardsCategory = category
+        ? flashcards.filter(flashcard => flashcard.category.toLowerCase().includes(category === "All" ? "" : category.toLowerCase()))
         : flashcards;
 
+    const filteredFlashcards = question
+        ? flashcardsCategory.filter(flashcard => flashcard.question.toLowerCase().includes(question.toLowerCase()))
+        : flashcardsCategory;
+
+
     useEffect(() => {
-        setnav(true)
-        setForm(false)
         fetchFlashcards();
+
         const handleOnline = () => {
             toast.info("Back online");
             fetchFlashcards();
         };
 
         const handleOffline = () => {
-            toast.error("You are offline. Please check your network connection.",{
+            toast.error("You are offline. Please check your network connection.", {
                 autoClose: false,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -70,10 +74,10 @@ const FlashcardList = ({setnav, setForm}) => {
         <div className="flashcard-list">
             <Box sx={{ mb: 2, width: '100%', display: 'flex', justifyContent: 'center' }}>
                 <TextField
-                    label="Search by Category"
+                    label="Search by Question"
                     variant="outlined"
-                    value={categoryInput}
-                    onChange={handleCategoryInputChange}
+                    value={question}
+                    onChange={handleQuestionInput}
                     sx={{ minWidth: 200 }}
                     InputProps={{
                         style: {

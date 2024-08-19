@@ -10,6 +10,7 @@ import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 
 const FlashcardForm = ({ setnav, setForm }) => {
     const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(false);
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
     const [code, setIsCode] = useState(false);
@@ -22,20 +23,16 @@ const FlashcardForm = ({ setnav, setForm }) => {
     const ref = useRef();
 
     const fetchUserCategory = async () => {
+        const loaderid = showLoaderToast()
         const savedToken = localStorage.getItem('token');
-        const tokenExpiry = localStorage.getItem('tokenExpiry');
-
-        if (savedToken && tokenExpiry && new Date().getTime() < tokenExpiry) {
-            const response = await axiosConfig.post('/nivak/flashcard/getusercategory/', null, {
-                params: {
-                    token: savedToken
-                }
-            });
-            setAvailableCategories(response.data.data);
-        } else {
-            navigate('/');
-            toast.warning("Login to access");
-        }
+        checkIsAdmin();
+        const response = await axiosConfig.post('/nivak/flashcard/getusercategory/', null, {
+            params: {
+                token: savedToken
+            }
+        });
+        setAvailableCategories(response.data.data);
+        hideLoaderToast(loaderid)
     };
 
     const handleSubmit = async (e) => {
@@ -69,6 +66,28 @@ const FlashcardForm = ({ setnav, setForm }) => {
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
     };
+
+    const checkIsAdmin = async () => {
+        const userName = localStorage.getItem('token');
+        const password = localStorage.getItem('encryption')
+        if(password === null) return;
+        try {
+            const response = await axiosConfig.post('/nivak/flashcard/auth/isadmin/', null, {
+                params: {
+                    token: userName,
+                    password: password
+                }
+            });
+            
+            if(response.data.success){
+              setIsAdmin(true)
+            }
+            
+        } catch (error) {
+            
+        }
+
+    }
 
     useEffect(() => {
         const savedToken = localStorage.getItem('token');
@@ -210,6 +229,7 @@ const FlashcardForm = ({ setnav, setForm }) => {
                             setCategory(e.target.value);
                         }
                     }}
+                    required
                     label="Category"
                 >
                     {availableCategories.map((cat, index) => (
@@ -230,9 +250,9 @@ const FlashcardForm = ({ setnav, setForm }) => {
                     sx={{ mb: 2, width: '100%' }}
                 />
             )}
-            <Button type="submit" variant="contained" color="primary" disabled={disableAddCard}>
+            { isAdmin && <Button type="submit" variant="contained" color="primary" disabled={disableAddCard}>
                 Add Flashcard
-            </Button>
+            </Button>}
         </Box>
     );
 };

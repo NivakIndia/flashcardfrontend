@@ -33,11 +33,44 @@ const Credential = ({setnav}) => {
   };
 
   const handleLogin = async (e) => {
+    if(password === "") handleLoginWithOutAuth(e);
+    else handleLoginWithAuth(e);
+  };
+
+  const handleLoginWithAuth = async (e) => {
     setDisableLogin(true);
     const loaderid = showLoaderToast()
     e.preventDefault();
     try {
       const response = await axiosConfig.post('/nivak/flashcard/auth/login/', { userName, password });
+      if(response.data.success){
+        const token = response.data.message;
+        const expiryTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('tokenExpiry', expiryTime);
+        localStorage.setItem('encryption', response.data.data)
+        hideLoaderToast(loaderid)
+        toast.success("Login Successfull");
+        navigate("/flashcards")
+      }
+      
+      else{
+        hideLoaderToast(loaderid)
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      hideLoaderToast(loaderid)
+      toast.error('Login failed');
+    }
+    setDisableLogin(false)
+  }
+  const handleLoginWithOutAuth = async (e) => {
+    setDisableLogin(true);
+    const loaderid = showLoaderToast()
+    e.preventDefault();
+    try {
+      const response = await axiosConfig.post('/nivak/flashcard/auth/loginnoauth/', { userName, password });
       if(response.data.success){
         const token = response.data.message;
         const expiryTime = new Date().getTime() + 24 * 60 * 60 * 1000;
@@ -58,7 +91,7 @@ const Credential = ({setnav}) => {
       toast.error('Login failed');
     }
     setDisableLogin(false)
-  };
+  }
 
   const handleRegister = async (e) => {
     setDisableReg(true)
@@ -118,7 +151,6 @@ const Credential = ({setnav}) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               autoComplete="false"
               sx={{ mb: 2 }}
             />

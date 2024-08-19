@@ -11,6 +11,7 @@ const FlashcardList = ({category}) => {
     const navigate = useNavigate();
     const [question, setQuestionInput] = useState('');
     const [flashcards, setFlashcards] = useState([]);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const handleQuestionInput = (e) => {
         setQuestionInput(e.target.value);
@@ -20,7 +21,7 @@ const FlashcardList = ({category}) => {
         const loaderid = showLoaderToast();
         const savedToken = localStorage.getItem('token');
         const tokenExpiry = localStorage.getItem('tokenExpiry');
-
+        checkIsAdmin();
         if (savedToken && tokenExpiry && new Date().getTime() < tokenExpiry) {
             const response = await axiosConfig.post('/nivak/flashcard/getflashcards/', null, {
                 params: {
@@ -35,6 +36,28 @@ const FlashcardList = ({category}) => {
             toast.warning("Login to access");
         }
     };
+
+    const checkIsAdmin = async () => {
+        const userName = localStorage.getItem('token');
+        const password = localStorage.getItem('encryption')
+        if(password === null) return;
+        try {
+            const response = await axiosConfig.post('/nivak/flashcard/auth/isadmin/', null, {
+                params: {
+                    token: userName,
+                    password: password
+                }
+            });
+            
+            if(response.data.success){
+              setIsAdmin(true)
+            }
+            
+        } catch (error) {
+            
+        }
+
+    }
 
     const flashcardsCategory = category
         ? flashcards.filter(flashcard => flashcard.category.toLowerCase().includes(category === "All" ? "" : category.toLowerCase()))
@@ -96,7 +119,7 @@ const FlashcardList = ({category}) => {
                 {filteredFlashcards.length > 0 ? (
                     filteredFlashcards.map((flashcard) => (
                         <Grid item xs={12} sm={6} key={flashcard.cardId}>
-                            <Flashcard flashcard={flashcard} fetchFlashcards={fetchFlashcards} />
+                            <Flashcard flashcard={flashcard} fetchFlashcards={fetchFlashcards} isAdmin={isAdmin}/>
                         </Grid>
                     ))
                 ) : (

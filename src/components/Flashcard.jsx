@@ -10,7 +10,7 @@ import { Editor } from '@monaco-editor/react';
 import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 import ReactQuill from 'react-quill';
 
-const Flashcard = ({ flashcard, fetchFlashcards }) => {
+const Flashcard = ({ flashcard, fetchFlashcards, isAdmin }) => {
     const navigate = useNavigate();
     const [showAnswer, setShowAnswer] = useState(false);
     const [upgradeOpen, setUpgradeOpen] = useState(false);
@@ -158,7 +158,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                 position: 'relative',
             }}
         >
-            <IconButton
+            {isAdmin && <IconButton
                 aria-label="delete"
                 onClick={handleDeleteClick}
                 sx={{
@@ -169,7 +169,7 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
                 }}
             >
                 <IoCloseSharp />
-            </IconButton>
+            </IconButton>}
             <Box sx={{ textAlign: 'left' }}>
                 <Typography
                     variant="h5"
@@ -203,9 +203,9 @@ const Flashcard = ({ flashcard, fetchFlashcards }) => {
             <Button onClick={toggleAnswer} variant="contained" sx={{ mt: 2 }}>
                 {showAnswer ? 'Hide Answer' : 'Show Answer'}
             </Button>
-            <Button onClick={handleUpgradeOpen} variant="contained" color="secondary" sx={{ mt: 2, ml: 2 }}>
+            {isAdmin && <Button onClick={handleUpgradeOpen} variant="contained" color="secondary" sx={{ mt: 2, ml: 2 }}>
                 Upgrade
-            </Button>
+            </Button>}
 
             <Dialog open={upgradeOpen} onClose={handleUpgradeClose}>
                 <DialogTitle>Upgrade Flashcard</DialogTitle>

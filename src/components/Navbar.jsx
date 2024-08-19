@@ -22,6 +22,7 @@ const Navbar = ({form}) => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpiry');
+        localStorage.removeItem('encryption')
         navigate('/');
         toast.success("Logged out successfully");
         handleClose();

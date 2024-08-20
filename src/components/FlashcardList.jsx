@@ -12,10 +12,8 @@ const FlashcardList = ({category}) => {
     const [question, setQuestionInput] = useState('');
     const [flashcards, setFlashcards] = useState([]);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [filteredFlashcards, setFilteredFlashcards] = useState([]);
 
-    const handleQuestionInput = (e) => {
-        setQuestionInput(e.target.value);
-    };
 
     const fetchFlashcards = async () => {
         const loaderid = showLoaderToast();
@@ -63,10 +61,14 @@ const FlashcardList = ({category}) => {
         ? flashcards.filter(flashcard => flashcard.category.toLowerCase().includes(category === "All" ? "" : category.toLowerCase()))
         : flashcards;
 
-    const filteredFlashcards = question
-        ? flashcardsCategory.filter(flashcard => flashcard.question.toLowerCase().includes(question.toLowerCase()))
-        : flashcardsCategory;
+    setFilteredFlashcards(flashcardsCategory);
 
+    const handleQuestionInput = (e) => {
+        setQuestionInput(e.target.value);
+        setFilteredFlashcards(question
+            ? flashcardsCategory.filter(flashcard => flashcard.question.toLowerCase().includes(question.toLowerCase()))
+            : flashcardsCategory)
+    };
 
     useEffect(() => {
         fetchFlashcards();

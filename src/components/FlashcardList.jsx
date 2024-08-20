@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import Flashcard from './Flashcard';
-import { Box, Grid, TextField, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, TextField, Typography } from '@mui/material';
 import { hideLoaderToast, showLoaderToast } from '../LoaderToast';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +11,13 @@ const FlashcardList = ({category}) => {
     const [question, setQuestionInput] = useState('');
     const [flashcards, setFlashcards] = useState([]);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [filteredFlashcards, setFilteredFlashcards] = useState([]);
+    const [searchLoading, setSearchLoading] = useState(false)
 
+    const handleQuestionInput = (e) => {
+        setSearchLoading(true);
+        setQuestionInput(e.target.value);
+        setSearchLoading(false)
+    };
 
     const fetchFlashcards = async () => {
         const loaderid = showLoaderToast();
@@ -61,14 +65,11 @@ const FlashcardList = ({category}) => {
         ? flashcards.filter(flashcard => flashcard.category.toLowerCase().includes(category === "All" ? "" : category.toLowerCase()))
         : flashcards;
 
-    setFilteredFlashcards(flashcardsCategory);
+    const filteredFlashcards = question
+        ? flashcardsCategory.filter(flashcard => flashcard.question.toLowerCase().includes(question.length < 2 ? "" :question.toLowerCase()))
+        : flashcardsCategory
 
-    const handleQuestionInput = (e) => {
-        setQuestionInput(e.target.value);
-        setFilteredFlashcards(question
-            ? flashcardsCategory.filter(flashcard => flashcard.question.toLowerCase().includes(question.toLowerCase()))
-            : flashcardsCategory)
-    };
+    
 
     useEffect(() => {
         fetchFlashcards();
@@ -97,7 +98,7 @@ const FlashcardList = ({category}) => {
 
     return (
         <div className="flashcard-list">
-            <Box sx={{ mb: 2, width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ mb: 2, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <TextField
                     label="Search by Question"
                     variant="outlined"
@@ -115,7 +116,7 @@ const FlashcardList = ({category}) => {
                             lineHeight: '1.1em',
                         }
                     }}
-                />
+                />{searchLoading && <CircularProgress size={20}  sx={{ marginLeft: 1, color: "#747474" }} />}
             </Box>
             <Grid container spacing={2} sx={{ px: 2 }}>
                 {filteredFlashcards.length > 0 ? (

@@ -77,6 +77,7 @@ const Credential = ({setnav}) => {
 
         localStorage.setItem('token', token);
         localStorage.setItem('tokenExpiry', expiryTime);
+        localStorage.setItem('encryption', null)
         hideLoaderToast(loaderid)
         toast.success("Login Successfull");
         navigate("/flashcards")
